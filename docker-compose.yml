@@ -1,0 +1,29 @@
+# Not verified inside the build sandbox this project was created in — it
+# has no docker binary (see root README). Standard compose file; please
+# test in your own environment. For local development without Docker,
+# see the root README's "Run it" section instead — it's faster to iterate on.
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_uploads:/app/uploads
+      - backend_db:/app/db
+    environment:
+      - DATABASE_URL=sqlite:////app/db/erga.db
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE: http://localhost:8000
+    ports:
+      - "4173:4173"
+    depends_on:
+      - backend
+
+volumes:
+  backend_uploads:
+  backend_db:

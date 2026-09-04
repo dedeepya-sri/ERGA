@@ -1,0 +1,5 @@
+# The backend is the only Python component (the frontend has its own
+# package.json). This file exists at the top level because the project
+# spec's folder structure calls for one here; it simply installs the real
+# one.
+-r backend/requirements.txt

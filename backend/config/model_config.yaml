@@ -1,0 +1,79 @@
+# ERGA model & scoring configuration
+#
+# Every model used by the grading engine is selected here, not hard-coded in
+# the services. Swapping "engine:" values is the ONLY change needed to move
+# from the classical-NLP baseline to transformer-backed retrieval/NLI once
+# they are available in your deployment environment.
+
+embedding_model:
+  # tfidf  -> scikit-learn TF-IDF + cosine similarity. Works fully offline,
+  #           no model download. This is the active default in the
+  #           reference build (see README "Why TF-IDF instead of SBERT").
+  # sbert  -> sentence-transformers encoder. Requires `pip install
+  #           sentence-transformers torch` AND network access to download
+  #           the model weights the first time it runs.
+  engine: tfidf
+  tfidf:
+    max_features: 4096
+    ngram_range: [1, 2]
+    min_df: 1
+  sbert:
+    name: sentence-transformers/all-MiniLM-L6-v2
+
+nli_model:
+  # lexical     -> deterministic keyword-coverage + similarity + negation
+  #                classifier implemented in services/nli.py. Fully working,
+  #                fully explainable, zero external dependencies.
+  # transformer -> HuggingFace text-classification pipeline using an NLI
+  #                checkpoint. Requires `pip install transformers torch`
+  #                and network access to download the model weights.
+  engine: lexical
+  lexical:
+    similarity_weight: 0.55
+    coverage_weight: 0.45
+  transformer:
+    name: cross-encoder/nli-deberta-v3-base
+
+retrieval:
+  top_k: 3
+  min_similarity: 0.05
+
+thresholds:
+  nli:
+    supported_min: 0.62
+    partial_min: 0.32
+  confidence:
+    recognition_review_below: 0.75
+    grading_review_below: 0.60
+
+scoring:
+  # fixed_fraction -> status maps to a fixed fraction of criterion marks
+  #                   (matches the spec's worked example exactly: partial = 0.5x)
+  # proportional   -> partial credit is interpolated by where the composite
+  #                   NLI score falls within the "partial" band
+  mode: fixed_fraction
+  fixed_fractions:
+    supported: 1.0
+    partially_supported: 0.5
+    not_supported: 0.0
+  round_ndigits: 2
+
+ocr:
+  engine: tesseract   # tesseract | paddleocr (not implemented in this build — see services/ocr.py)
+  handwriting_force_review: true
+  tesseract_psm: 6
+  tesseract_lang: eng
+  # median (fast, default) | gaussian | bilateral | nlm (slow — see the
+  # benchmark note in services/extraction.py::preprocess_for_ocr) | none
+  denoise_method: median
+
+segmentation:
+  min_segment_chars: 3
+
+storage:
+  upload_dir: uploads
+  max_upload_mb: 20
+  allowed_extensions: [".pdf", ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff"]
+
+database:
+  url: "sqlite:///./erga.db"

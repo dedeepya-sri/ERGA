@@ -1,0 +1,39 @@
+# ERGA backend — core dependencies (verified installable & working offline/without a model hub)
+fastapi==0.141.1
+uvicorn[standard]==0.52.3
+sqlalchemy==2.0.52
+pydantic==2.13.4
+python-multipart==0.0.32
+aiofiles==25.1.0
+PyYAML==6.0.3
+
+# Classical NLP / retrieval (default engine — no model download required)
+scikit-learn==1.8.0
+numpy==2.4.4
+
+# Document & image processing
+pymupdf==1.28.2
+pdfplumber==0.11.9
+pytesseract==0.3.13
+opencv-python-headless==4.13.0.92
+pillow==12.1.1
+
+# Reporting
+reportlab==4.4.10
+
+# Testing
+pytest==9.1.1
+httpx==0.28.1
+
+# --- Optional: transformer-backed engines (Section 11/33 of the spec) -----
+# NOT installed in the reference build environment because it has no network
+# route to huggingface.co (model weights cannot be downloaded there). The
+# code that uses these is fully implemented behind the same interface as the
+# default engine (see services/embeddings.py, services/nli.py) and activates
+# automatically once these packages are installed AND the configured model
+# can be downloaded/cached. Uncomment to enable in an environment with model
+# hub access:
+#
+# torch==2.4.*
+# sentence-transformers==3.*
+# transformers==4.*

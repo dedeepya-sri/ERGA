@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+
+# Backend runtime artifacts
+backend/erga.db
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
+# ML artifacts (Section 50 — don't commit student data or large weights)
+ml/checkpoints/*
+!ml/checkpoints/.gitkeep
+datasets/**/*.csv
+datasets/**/*.zip
+datasets/ricechem/Automated-Long-Answer-Grading/
+datasets/pecuchova/genai-automated-grading/
+datasets/handwritten/*
+!datasets/handwritten/README.md
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
