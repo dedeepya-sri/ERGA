@@ -6,7 +6,8 @@ Run locally with:
     uvicorn main:app --reload --port 8000
 """
 from __future__ import annotations
-
+import os
+os.environ["USE_TF"] = "0"
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI

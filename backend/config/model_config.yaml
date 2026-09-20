@@ -59,7 +59,7 @@ scoring:
   round_ndigits: 2
 
 ocr:
-  engine: tesseract   # tesseract | paddleocr (not implemented in this build — see services/ocr.py)
+  engine: trocr   # tesseract | paddleocr (not implemented in this build — see services/ocr.py)
   handwriting_force_review: true
   tesseract_psm: 6
   tesseract_lang: eng

@@ -28,7 +28,7 @@ import pytesseract
 from pytesseract import Output
 
 from config.settings import Config
-
+from services.ocr_preprocess import preprocess_image
 
 @dataclass
 class OCRWord:
@@ -79,6 +79,7 @@ class TesseractOCREngine(OCREngine):
     name = "tesseract"
 
     def recognize(self, image: np.ndarray, page: int, lang: str, psm: int) -> OCRPageResult:
+        image = preprocess_image(image)
         config_str = f"--psm {psm}"
         data = pytesseract.image_to_data(
             image, lang=lang, config=config_str, output_type=Output.DICT
@@ -138,6 +139,9 @@ class PaddleOCREngine(OCREngine):
 
 
 def get_ocr_engine(config: Config) -> OCREngine:
+    if config.ocr.engine == "trocr":
+        from services.ocr_trocr import TrOCREngine
+        return TrOCREngine()
     if config.ocr.engine == "paddleocr":
         return PaddleOCREngine()
     return TesseractOCREngine()
